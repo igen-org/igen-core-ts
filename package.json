@@ -1,20 +1,64 @@
 {
-  "name": "@igen/core",
-  "version": "1.0.0",
-  "description": "",
-  "type": "module",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "packageManager": "pnpm@10.20.0",
-  "devDependencies": {
-    "eslint": "^9.39.1",
-    "prettier": "^3.6.2",
-    "typescript": "^5.9.3",
-    "vitest": "^4.0.13"
-  }
+    "name": "@igen/core",
+    "version": "1.0.0",
+    "description": "",
+    "type": "module",
+    "main": "./dist/index.js",
+    "types": "./dist/index.d.ts",
+    "exports": {
+        ".": {
+            "types": "./dist/index.d.ts",
+            "import": "./dist/index.js"
+        },
+        "./domain": {
+            "types": "./dist/domain/index.d.ts",
+            "import": "./dist/domain/index.js"
+        },
+        "./enum": {
+            "types": "./dist/enum/index.d.ts",
+            "import": "./dist/enum/index.js"
+        },
+        "./error": {
+            "types": "./dist/error/index.d.ts",
+            "import": "./dist/error/index.js"
+        },
+        "./service": {
+            "types": "./dist/service/index.d.ts",
+            "import": "./dist/service/index.js"
+        },
+        "./singleton": {
+            "types": "./dist/singleton.d.ts",
+            "import": "./dist/singleton.js"
+        }
+    },
+    "files": [
+        "dist"
+    ],
+    "scripts": {
+        "build": "tsc -p tsconfig.json",
+        "typecheck": "tsc -p tsconfig.json --noEmit",
+        "lint": "eslint .",
+        "test": "vitest run --dir test"
+    },
+    "keywords": [],
+    "author": "",
+    "license": "ISC",
+    "devDependencies": {
+        "@types/node": "^24.10.1",
+        "@eslint/js": "^9.39.1",
+        "eslint": "^9.39.1",
+        "globals": "^16.5.0",
+        "prettier": "^3.6.2",
+        "typescript": "^5.9.3",
+        "typescript-eslint": "^8.47.0",
+        "vitest": "^4.0.13"
+    },
+    "dependencies": {
+        "@igen/shared": "github:igen-org/igen-shared-ts#v1.3.1"
+    },
+    "pnpm": {
+        "onlyBuiltDependencies": [
+            "@igen/shared"
+        ]
+    }
 }

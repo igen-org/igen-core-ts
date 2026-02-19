@@ -21,7 +21,8 @@ export default defineConfig([
         },
         rules: {
             semi: ['error', 'always'],
-            '@typescript-eslint/strict-boolean-expressions': 'error',
+            '@typescript-eslint/strict-boolean-expressions': ['error', { allowString: false, allowNumber: false }],
+            '@typescript-eslint/explicit-function-return-type': 'error',
         },
     },
 ]);
