@@ -1,6 +1,6 @@
 {
     "name": "@igen/core",
-    "version": "1.0.1",
+    "version": "1.1.0",
     "description": "",
     "type": "module",
     "main": "./dist/index.js",
@@ -46,14 +46,14 @@
     "author": "",
     "license": "ISC",
     "devDependencies": {
-        "@types/node": "^24.10.1",
-        "@eslint/js": "^9.39.1",
-        "eslint": "^9.39.1",
+        "@eslint/js": "^9.39.2",
+        "@types/node": "^24.10.13",
+        "eslint": "^9.39.2",
         "globals": "^16.5.0",
-        "prettier": "^3.6.2",
+        "prettier": "^3.8.1",
         "typescript": "^5.9.3",
-        "typescript-eslint": "^8.47.0",
-        "vitest": "^4.0.13"
+        "typescript-eslint": "^8.56.0",
+        "vitest": "^4.0.18"
     },
     "dependencies": {
         "@igen/shared": "github:igen-org/igen-shared-ts#v1.3.1"
@@ -61,6 +61,9 @@
     "pnpm": {
         "onlyBuiltDependencies": [
             "@igen/shared"
+        ],
+        "ignoredBuiltDependencies": [
+            "esbuild"
         ]
     }
 }

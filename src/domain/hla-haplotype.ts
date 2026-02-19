@@ -17,7 +17,20 @@ const coerceLocus = (locus: LocusInput): Result<HlaLocus, Error> => {
     return HlaLocus.fromValue(locus);
 };
 
-export class HlaHaplotype {
+export interface HlaHaplotypeLike {
+    get(locus: LocusInput, exact?: boolean): HlaAlleleLike | null;
+    set(locus: LocusInput, allele: HlaAlleleLike): HlaHaplotype;
+    has(locus: LocusInput, exact?: boolean): boolean;
+    swap(haplotype: HlaHaplotype, locus: LocusInput): [HlaHaplotype, HlaHaplotype];
+    swapAll(haplotype: HlaHaplotype, loci: LocusInput[]): [HlaHaplotype, HlaHaplotype];
+    clone(): HlaHaplotype;
+    concat(haplotype: HlaHaplotype): HlaHaplotype;
+    toString(): string;
+    [Symbol.iterator](): Iterator<HlaAlleleLike>;
+    readonly alleles: HlaAlleleLike[];
+}
+
+export class HlaHaplotype implements HlaHaplotypeLike {
     private readonly alleleMap: Map<HlaLocusEnum, HlaAlleleLike>;
 
     public constructor(alleles: Iterable<HlaAlleleLike>) {
@@ -140,3 +153,5 @@ export class HlaHaplotype {
         return Array.from(this.alleleMap.values());
     }
 }
+
+export type HlaHaplotypeConstructor = typeof HlaHaplotype;
