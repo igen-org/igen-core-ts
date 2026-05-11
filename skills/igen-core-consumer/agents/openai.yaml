@@ -1,0 +1,4 @@
+interface:
+  display_name: "@igen/core Consumer"
+  short_description: "Use @igen/core HLA primitives"
+  default_prompt: "Use $igen-core-consumer to integrate @igen/core HLA models, enums, logging, or API errors into this project."
