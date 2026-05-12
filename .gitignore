@@ -95,6 +95,10 @@ out
 dist
 .output
 
+# This package is installable directly from GitHub, so root build artifacts must be committed.
+!dist/
+!dist/**
+
 # Gatsby files
 .cache/
 # Comment in the public line in if your project uses Gatsby and not Next.js

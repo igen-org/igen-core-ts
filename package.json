@@ -36,8 +36,6 @@
     ],
     "scripts": {
         "build": "tsc -p tsconfig.json",
-        "prepare": "npm run build",
-        "prepack": "npm run build",
         "typecheck": "tsc -p tsconfig.json --noEmit",
         "lint": "eslint .",
         "test": "vitest run --dir test"
@@ -45,25 +43,23 @@
     "keywords": [],
     "author": "",
     "license": "ISC",
+    "sideEffects": false,
     "devDependencies": {
-        "@eslint/js": "^9.39.2",
-        "@types/node": "^24.10.13",
-        "eslint": "^9.39.2",
+        "@eslint/js": "^9.39.4",
+        "@types/node": "^24.12.3",
+        "eslint": "^9.39.4",
         "globals": "^16.5.0",
-        "prettier": "^3.8.1",
+        "prettier": "^3.8.3",
         "typescript": "^5.9.3",
-        "typescript-eslint": "^8.56.0",
-        "vitest": "^4.0.18"
+        "typescript-eslint": "^8.59.3",
+        "vitest": "^4.1.6"
     },
     "dependencies": {
-        "@igen/shared": "github:igen-org/igen-shared-ts#v1.3.1"
+        "@igen/shared": "github:igen-org/igen-shared-ts#v1.4.0"
     },
     "pnpm": {
-        "onlyBuiltDependencies": [
-            "@igen/shared"
-        ],
-        "ignoredBuiltDependencies": [
-            "esbuild"
-        ]
+        "allowBuilds": {
+            "esbuild": true
+        }
     }
 }
