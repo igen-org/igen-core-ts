@@ -1,6 +1,6 @@
 {
     "name": "@igen/core",
-    "version": "1.1.0",
+    "version": "1.2.0",
     "description": "",
     "type": "module",
     "main": "./dist/index.js",
@@ -56,10 +56,5 @@
     },
     "dependencies": {
         "@igen/shared": "github:igen-org/igen-shared-ts#v1.4.0"
-    },
-    "pnpm": {
-        "allowBuilds": {
-            "esbuild": true
-        }
     }
 }
