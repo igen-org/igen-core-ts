@@ -1,6 +1,9 @@
 {
     "name": "@igen/core",
     "version": "1.2.0",
+    "publishConfig": {
+        "registry": "https://nexus/repository/npm-hosted/"
+    },
     "description": "",
     "type": "module",
     "main": "./dist/index.js",
@@ -55,6 +58,6 @@
         "vitest": "^4.1.6"
     },
     "dependencies": {
-        "@igen/shared": "github:igen-org/igen-shared-ts#v1.4.0"
+        "@igen/shared": "^1.4.0"
     }
 }
