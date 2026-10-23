@@ -98,7 +98,7 @@ throw new ApiError('Failed to load records', 502, error);
 
 ## Important Behavior
 
-- Allele parsing accepts standard forms like `A*01:01`, higher-resolution forms like `A*01:01:01`, DRB345 aliases `B3`, `B4`, `B5`, `NEGATIVE`, `NEGATIVO`, `MISSING`, `AUSENTE`, and `?`.
+- Allele parsing accepts standard forms like `A*01:01`, higher-resolution forms like `A*01:01:01`, DRB345 aliases `B3`, `B4`, `B5`, `NEGATIVE`, `NEGATIVO`, `NEG`, `MISSING`, `AUSENTE`, `AUS`, and `?`. The short forms `NEG`/`AUS` are accepted only bare or on DRB3/4/5/345 (`A*NEG` is rejected), and sentinels never report a MAC code.
 - `HlaAllele.fromString`, `HlaAllele.getLocus`, `HlaAllele.getSpecificity`, `HlaHaplotype.create`, `HlaLocus.fromValue`, and `HlaLocusGroup.fromValue` return `Result` objects.
 - `HlaHaplotype` is immutable: `set`, `swap`, `swapAll`, `clone`, and `concat` return new haplotype instances or the original instance for a no-op.
 - `HlaHaplotype` stores `DRB3`, `DRB4`, `DRB5`, and `DRB345` under the DRB345 key. Use `get(locus, true)` when exact DRB3/4/5 matching matters.

@@ -68,8 +68,11 @@ Accepted examples:
 - `A*01:01N`, `A*01:01L`, `A*01:01Q` for suffixes
 - `B3*02:01`, `B4*01:01`, `B5*01:01` as aliases for `DRB3`, `DRB4`, `DRB5`
 - `NEGATIVE`, `NEGATIVO`, `MISSING`, `AUSENTE`, `?`
+- `NEG`, `AUS` (short forms, e.g. Igenlab's `DRB345*NEG`), accepted bare or on DRB3/DRB4/DRB5/DRB345 (including `B3`/`B4`/`B5`) only
 
-Rejected example: `A0101` because allele strings must contain `*`.
+Rejected examples: `A0101` because allele strings must contain `*`; `A*NEG` because short sentinels are DRB345-only.
+
+Bare sentinels (`NEGATIVE`, `NEG`, `MISSING`, `AUS`, ...) parse on the `DRB345` locus; with an explicit locus the given locus is kept. Sentinels never report a MAC code.
 
 Static methods:
 

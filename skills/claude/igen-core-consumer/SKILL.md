@@ -110,10 +110,13 @@ throw new ApiError('Upstream failed', 502, originalError);
 
 - **Accepted input:** `A*01`, `A*01:01`, `A*01:01:01:01`, MAC codes (`A*01:AB`), expression suffixes
   (`A*01:01N`, `L`, `Q`), DRB345 aliases (`B3*`, `B4*`, `B5*`), and the sentinels `NEGATIVE`,
-  `NEGATIVO`, `MISSING`, `AUSENTE`, `?`. Locus parsing is case-insensitive. A string with no `*`
-  (`A0101`) is rejected.
-- **Sentinels:** a bare `NEGATIVE`/`MISSING` (and their Portuguese forms) parses as a **DRB345**
-  allele. Check `isNegative` / `isMissing` before treating it as a real typing.
+  `NEGATIVO`, `NEG`, `MISSING`, `AUSENTE`, `AUS`, `?`. Locus parsing is case-insensitive. A string
+  with no `*` (`A0101`) is rejected.
+- **Sentinels:** a bare `NEGATIVE`/`NEG`/`MISSING`/`AUS` (and the Portuguese forms) parses as a
+  **DRB345** allele. With a locus (`DRB4*NEG`, `B3*AUS`), the given locus is kept. The short forms
+  `NEG`/`AUS` (Igenlab's `DRB345*NEG`) are accepted only on DRB3/4/5/345, so `A*NEG` is rejected.
+  Sentinels have no MAC code (`hasMacCode` is `false`). Check `isNegative` / `isMissing` before
+  treating one as a real typing.
 - **DRB345 slot:** a haplotype stores DRB3, DRB4, DRB5 and DRB345 in a single slot.
   `get(HlaLocus.DRB4)` returns whatever DRB3/4/5 allele is stored. Pass `exact = true`
   (`get(HlaLocus.DRB4, true)`) when the specific gene matters.

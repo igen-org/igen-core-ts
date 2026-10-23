@@ -11,13 +11,19 @@ const LOCUS_ALTERNATIVE_MAP = {
     B4: HlaLocus.DRB4,
     B5: HlaLocus.DRB5,
 };
-const NEGATIVE_SPECIFICITIES = new Set(['NEGATIVO', 'NEGATIVE']);
-const MISSING_SPECIFICITIES = new Set(['AUSENTE', 'MISSING']);
+// Short sentinels (e.g. Igenlab's DRB345*NEG) are only meaningful for the DRB345 family.
+const DRB345_ONLY_SPECIFICITIES = new Set(['NEG', 'AUS']);
+const NEGATIVE_SPECIFICITIES = new Set(['NEGATIVO', 'NEGATIVE', 'NEG']);
+const MISSING_SPECIFICITIES = new Set(['AUSENTE', 'MISSING', 'AUS']);
 const SPECIFICITY_EXCEPTIONS = new Set([...NEGATIVE_SPECIFICITIES, ...MISSING_SPECIFICITIES, '?']);
 const SPECIFICITY_REGEX = /^\d{2,}((:[A-Z]{2,})|(:\d{2,}[A-Z]?)*)$/i;
 const isBlank = (value) => value === undefined || value === null || value.trim() === '';
-const isValidSpecificity = (specificity) => {
+const isSpecificityException = (specificity) => SPECIFICITY_EXCEPTIONS.has(specificity.toUpperCase());
+const isValidSpecificity = (specificity, locus) => {
     const normalized = specificity.toUpperCase();
+    if (DRB345_ONLY_SPECIFICITIES.has(normalized)) {
+        return locus.isDrb345;
+    }
     if (SPECIFICITY_EXCEPTIONS.has(normalized)) {
         return true;
     }
@@ -57,7 +63,7 @@ export class HlaAllele {
     displayFieldCount;
     suffix;
     constructor(locus, specificity, fieldCount, macCode, displayFieldCount = 2, suffix = null) {
-        if (!isValidSpecificity(specificity)) {
+        if (!isValidSpecificity(specificity, locus)) {
             throw new Error(`Invalid specificity: ${specificity}`);
         }
         this.locus = locus;
@@ -112,6 +118,9 @@ export class HlaAllele {
         return specificity.split(':').length;
     }
     static getMacCode(specificity) {
+        if (isSpecificityException(specificity)) {
+            return null;
+        }
         const lastField = specificity.split(':').at(-1);
         if (lastField === undefined) {
             return null;
@@ -138,7 +147,7 @@ export class HlaAllele {
         if (!locusResult.ok) {
             return false;
         }
-        return isValidSpecificity(specificity);
+        return isValidSpecificity(specificity, locusResult.value);
     }
     clone() {
         return new HlaAllele(this.locus, this.specificity, this.fieldCount, this.macCode, this.displayFieldCount, this.suffix);

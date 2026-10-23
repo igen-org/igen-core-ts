@@ -16,15 +16,23 @@ const LOCUS_ALTERNATIVE_MAP = {
 
 type LocusAlternativeMapKey = keyof typeof LOCUS_ALTERNATIVE_MAP;
 
-const NEGATIVE_SPECIFICITIES = new Set(['NEGATIVO', 'NEGATIVE']);
-const MISSING_SPECIFICITIES = new Set(['AUSENTE', 'MISSING']);
+// Short sentinels (e.g. Igenlab's DRB345*NEG) are only meaningful for the DRB345 family.
+const DRB345_ONLY_SPECIFICITIES = new Set(['NEG', 'AUS']);
+const NEGATIVE_SPECIFICITIES = new Set(['NEGATIVO', 'NEGATIVE', 'NEG']);
+const MISSING_SPECIFICITIES = new Set(['AUSENTE', 'MISSING', 'AUS']);
 const SPECIFICITY_EXCEPTIONS = new Set([...NEGATIVE_SPECIFICITIES, ...MISSING_SPECIFICITIES, '?']);
 const SPECIFICITY_REGEX = /^\d{2,}((:[A-Z]{2,})|(:\d{2,}[A-Z]?)*)$/i;
 
 const isBlank = (value: string | null | undefined): boolean => value === undefined || value === null || value.trim() === '';
 
-const isValidSpecificity = (specificity: string): boolean => {
+const isSpecificityException = (specificity: string): boolean => SPECIFICITY_EXCEPTIONS.has(specificity.toUpperCase());
+
+const isValidSpecificity = (specificity: string, locus: HlaLocus): boolean => {
     const normalized = specificity.toUpperCase();
+    if (DRB345_ONLY_SPECIFICITIES.has(normalized)) {
+        return locus.isDrb345;
+    }
+
     if (SPECIFICITY_EXCEPTIONS.has(normalized)) {
         return true;
     }
@@ -115,7 +123,7 @@ export class HlaAllele implements HlaAlleleLike {
         displayFieldCount: number = 2,
         suffix: string | null = null
     ) {
-        if (!isValidSpecificity(specificity)) {
+        if (!isValidSpecificity(specificity, locus)) {
             throw new Error(`Invalid specificity: ${specificity}`);
         }
 
@@ -182,6 +190,10 @@ export class HlaAllele implements HlaAlleleLike {
     }
 
     public static getMacCode(specificity: string): string | null {
+        if (isSpecificityException(specificity)) {
+            return null;
+        }
+
         const lastField = specificity.split(':').at(-1);
         if (lastField === undefined) {
             return null;
@@ -215,7 +227,7 @@ export class HlaAllele implements HlaAlleleLike {
             return false;
         }
 
-        return isValidSpecificity(specificity);
+        return isValidSpecificity(specificity, locusResult.value);
     }
 
     public clone(): HlaAllele {

@@ -29,6 +29,44 @@ describe('HlaAllele', () => {
         expect(missing.locus).toBe(HlaLocus.DRB345);
     });
 
+    it('accepts short NEG/AUS sentinels for the DRB345 family', () => {
+        const bareNeg = expectOk(HlaAllele.fromString('NEG'));
+        const bareAus = expectOk(HlaAllele.fromString('aus'));
+        expect(bareNeg.locus).toBe(HlaLocus.DRB345);
+        expect(bareNeg.isNegative).toBe(true);
+        expect(bareAus.locus).toBe(HlaLocus.DRB345);
+        expect(bareAus.isMissing).toBe(true);
+
+        const drb345 = expectOk(HlaAllele.fromString('DRB345*NEG'));
+        const drb3 = expectOk(HlaAllele.fromString('DRB3*neg'));
+        const b4 = expectOk(HlaAllele.fromString('B4*NEG'));
+        const b5 = expectOk(HlaAllele.fromString('B5*AUS'));
+        expect(drb345.locus).toBe(HlaLocus.DRB345);
+        expect(drb3.locus).toBe(HlaLocus.DRB3);
+        expect(b4.locus).toBe(HlaLocus.DRB4);
+        expect(b4.isNegative).toBe(true);
+        expect(b5.locus).toBe(HlaLocus.DRB5);
+        expect(b5.isMissing).toBe(true);
+        expect(HlaAllele.isValidAllele('DRB345*NEG')).toBe(true);
+    });
+
+    it('rejects short NEG/AUS sentinels outside the DRB345 family', () => {
+        expect(HlaAllele.fromString('A*NEG').ok).toBe(false);
+        expect(HlaAllele.fromString('DRB1*AUS').ok).toBe(false);
+        expect(HlaAllele.isValidAllele('A*NEG')).toBe(false);
+        expect(() => new HlaAllele(HlaLocus.A, 'NEG', 1, null)).toThrow('Invalid specificity: NEG');
+    });
+
+    it('does not treat sentinels as MAC codes', () => {
+        for (const value of ['DRB345*NEGATIVO', 'NEGATIVE', 'MISSING', 'DRB345*NEG', 'B3*AUS']) {
+            const allele = expectOk(HlaAllele.fromString(value));
+            expect(allele.macCode).toBeNull();
+            expect(allele.hasMacCode).toBe(false);
+        }
+        expect(HlaAllele.getMacCode('AUSENTE')).toBeNull();
+        expect(HlaAllele.getMacCode('01:AB')).toBe('AB');
+    });
+
     it('rejects malformed alleles', () => {
         const result = HlaAllele.fromString('A0101');
         expect(result.ok).toBe(false);
