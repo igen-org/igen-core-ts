@@ -201,8 +201,9 @@ export class HlaAllele {
         if (nField > this.fieldCount) {
             return ok(this.clone());
         }
-        const specificity = this.reduceSpecificity(this.specificity, true, false);
+        const fields = this.withoutSuffix().specificity.split(':').slice(0, nField).join(':');
         const suffix = keepSuffix && this.hasSuffix ? this.suffix : null;
+        const specificity = suffix !== null ? `${fields}${suffix}` : fields;
         const macCode = HlaAllele.getMacCode(specificity);
         return ok(new HlaAllele(this.locus, specificity, nField, macCode, Math.min(this.displayFieldCount, nField), suffix));
     }
