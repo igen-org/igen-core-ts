@@ -55,4 +55,38 @@ describe('HlaAllele', () => {
         expect(resolution.fieldCount).toBe(2);
         expect(resolution.isHighResolution).toBe(true);
     });
+
+    it('truncates to the requested field count regardless of display field count', () => {
+        const allele = expectOk(HlaAllele.fromString('A*01:01:01:01'));
+        const oneField = expectOk(allele.asResolution(1));
+        const threeFields = expectOk(allele.asResolution(3));
+        expect(oneField.allele).toBe('A*01');
+        expect(oneField.fieldCount).toBe(1);
+        expect(oneField.isLowResolution).toBe(true);
+        expect(threeFields.allele).toBe('A*01:01:01');
+        expect(threeFields.fieldCount).toBe(3);
+    });
+
+    it('keeps or drops the suffix when reducing resolution', () => {
+        const allele = expectOk(HlaAllele.fromString('A*01:01:01N'));
+        const kept = expectOk(allele.asResolution(2));
+        const dropped = expectOk(allele.asResolution(2, false));
+        expect(kept.allele).toBe('A*01:01N');
+        expect(kept.isNull).toBe(true);
+        expect(kept.withoutSuffix().allele).toBe('A*01:01');
+        expect(dropped.allele).toBe('A*01:01');
+        expect(dropped.hasSuffix).toBe(false);
+    });
+
+    it('returns a clone when the requested resolution exceeds the field count', () => {
+        const allele = expectOk(HlaAllele.fromString('A*01:01'));
+        const resolution = expectOk(allele.asResolution(4));
+        expect(resolution).not.toBe(allele);
+        expect(resolution.allele).toBe('A*01:01');
+    });
+
+    it('rejects resolutions below one field', () => {
+        const allele = expectOk(HlaAllele.fromString('A*01:01'));
+        expect(allele.asResolution(0).ok).toBe(false);
+    });
 });
